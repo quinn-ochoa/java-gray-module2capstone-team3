@@ -80,12 +80,14 @@ public class ConsoleService {
         }
     }
 
-    public void displayUsers(User[] users) {
+    public void displayOtherUsers(User[] users, User currentUser) {
         System.out.println("-------------------------------");
         System.out.println("Users ");
         System.out.println("-------------------------------");
         for (User user : users) {
-            System.out.println(user);
+            if (user.getId() != currentUser.getId()) {
+                System.out.println(user);
+            }
         }
         System.out.println("-----------");
     }

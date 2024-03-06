@@ -2,6 +2,7 @@ package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.exception.DaoException;
 import com.techelevator.tenmo.model.Account;
+import com.techelevator.tenmo.model.Transfer;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -18,10 +19,10 @@ public class JdbcAccountDao implements AccountDao {
     }
 
     @Override
-    public BigDecimal getBalanceByAccountId(int id) {
+    public BigDecimal getBalanceById(int id) {
         BigDecimal balance = null;
         Account account;
-        String sql = "SELECT * FROM account WHERE account_id = ?;";
+        String sql = "SELECT * FROM account WHERE user_id = ?;";
         try{
             SqlRowSet results = jdbcTemplate.queryForRowSet(sql, id);
             if(results.next()){
@@ -38,8 +39,20 @@ public class JdbcAccountDao implements AccountDao {
 
     @Override
     public BigDecimal updateBalanceById(int id) {
+
+
         return null;
     }
+
+    public BigDecimal transfer(Account fromUser, Account toUser, BigDecimal amount, int transferType) {
+        if (transferType == 2) {
+            fromUser.setBalance(fromUser.getBalance().subtract(amount));
+            toUser.setBalance(toUser.getBalance().add(amount));
+        }
+        return null;
+    }
+
+    
 
     public Account mapRowToAccount(SqlRowSet rowSet) {
         Account account = new Account();

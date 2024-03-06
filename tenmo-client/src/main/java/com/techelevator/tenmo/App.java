@@ -92,8 +92,7 @@ public class App {
     }
 
 	private void viewCurrentBalance() {
-        int accountId = consoleService.promptForInt("Please enter account number: ");
-		BigDecimal response = accountService.getBalanceByAccountId(accountId);
+		BigDecimal response = accountService.getBalanceByAccountId(currentUser.getUser().getId());
         System.out.println(response);
 	}
 
@@ -109,8 +108,14 @@ public class App {
 
 	private void sendBucks() {
 		User[] users = accountService.getUsers();
-        consoleService.displayUsers(users);
-		
+        consoleService.displayOtherUsers(users, currentUser.getUser());
+        int userId;
+        do {
+            userId = consoleService.promptForInt("Enter ID of user you are sending to (0 to cancel): ");
+        }
+        while (userId == currentUser.getUser().getId());
+        BigDecimal amount = consoleService.promptForBigDecimal("Enter amount to transfer: ");
+
 	}
 
 	private void requestBucks() {

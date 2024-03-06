@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
-import java.security.Principal;
-import java.util.List;
 
 @PreAuthorize("isAuthenticated()")
 @RequestMapping(path = "/accounts/")
@@ -34,7 +32,7 @@ public class AccountController {
 
     @RequestMapping(path = "{id}", method = RequestMethod.GET)
     public BigDecimal getBalance(@PathVariable int id){
-        BigDecimal balance = accountDao.getBalanceByAccountId(id);
+        BigDecimal balance = accountDao.getBalanceById(id);
         if(balance == null){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account number not found");
         }
