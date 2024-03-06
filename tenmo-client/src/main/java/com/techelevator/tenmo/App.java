@@ -1,6 +1,7 @@
 package com.techelevator.tenmo;
 
 import com.techelevator.tenmo.model.AuthenticatedUser;
+import com.techelevator.tenmo.model.User;
 import com.techelevator.tenmo.model.UserCredentials;
 import com.techelevator.tenmo.services.AccountService;
 import com.techelevator.tenmo.services.AuthenticationService;
@@ -107,7 +108,8 @@ public class App {
 	}
 
 	private void sendBucks() {
-		// TODO Auto-generated method stub
+		User[] users = accountService.getUsers();
+        consoleService.displayUsers(users);
 		
 	}
 

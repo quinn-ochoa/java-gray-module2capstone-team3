@@ -11,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +46,7 @@ public class JdbcUserDao implements UserDao {
         String sql = "SELECT user_id, username, password_hash FROM tenmo_user";
         try {
             SqlRowSet results = jdbcTemplate.queryForRowSet(sql);
-            while (results.next()) {
+            while (results.next()) { //TODO remove current user from list of users
                 User user = mapRowToUser(results);
                 users.add(user);
             }
