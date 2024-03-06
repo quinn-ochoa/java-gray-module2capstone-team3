@@ -29,7 +29,6 @@ public class AccountController {
         this.accountDao = accountDao;
         this.transferDao = transferDao;
     }
-
     @RequestMapping(path = "{id}", method = RequestMethod.GET)
     public BigDecimal getBalance(@PathVariable int id){
         BigDecimal balance = accountDao.getBalanceById(id);
@@ -38,7 +37,6 @@ public class AccountController {
         }
         return balance;
     }
-
     @RequestMapping(path = "", method = RequestMethod.GET)
     public User[] getUsers() {
         User[] users = null;
@@ -48,7 +46,6 @@ public class AccountController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to get list of user accounts." + e.getMessage());
         }
         return users;
-
     }
 
 }

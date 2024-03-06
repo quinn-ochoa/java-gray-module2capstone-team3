@@ -3,6 +3,7 @@ package com.techelevator.tenmo.dao;
 import com.techelevator.tenmo.exception.DaoException;
 import com.techelevator.tenmo.model.Account;
 import com.techelevator.tenmo.model.Transfer;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.CannotGetJdbcConnectionException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -44,12 +45,43 @@ public class JdbcAccountDao implements AccountDao {
         return null;
     }
 
-    public BigDecimal transfer(Account fromUser, Account toUser, BigDecimal amount, int transferType) {
-        if (transferType == 2) {
-            fromUser.setBalance(fromUser.getBalance().subtract(amount));
-            toUser.setBalance(toUser.getBalance().add(amount));
+    public boolean transfer(Account fromUser, Account toUser, BigDecimal amount, int transferType) {
+        boolean success = false;
+        fromUser.setBalance(fromUser.getBalance().subtract(amount));
+        toUser.setBalance(toUser.getBalance().add(amount));
+        updateAccount(fromUser);
+        updateAccount(toUser);
+        // TODO update to accept dynamic transferStatus
+        Transfer transfer = new Transfer(fromUser.getUserId(), toUser.getUserId(), amount, transferType, 2);
+        success = true;
+        // TODO create createTransfer
+        return success;
+    }
+
+    @Override
+    public Account updateAccount(Account account) {
+        Account updatedAccount = null;
+
+        String sql = "UPDATE account SET balance = ? WHERE user_id = ?;";
+
+        try {
+            int numberOfRows = jdbcTemplate.update(sql,
+                    account.getBalance(), account.getUserId());
+            if (numberOfRows == 0) {
+                throw new DaoException("Zero rows affected, expected at least one");
+            }
+            else {
+                updatedAccount = null; //TODO makes getAccountById
+            }
         }
-        return null;
+        catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
+        }
+        catch (DataIntegrityViolationException e) {
+            throw new DaoException("Data integrity violation", e);
+        }
+
+        return updatedAccount;
     }
 
     
