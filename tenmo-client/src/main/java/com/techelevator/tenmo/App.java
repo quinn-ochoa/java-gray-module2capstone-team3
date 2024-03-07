@@ -96,7 +96,7 @@ public class App {
     }
 
 	private void viewCurrentBalance() {
-		BigDecimal response = accountService.getBalanceByAccountId(currentUser.getUser().getId());
+		BigDecimal response = accountService.getBalanceById(currentUser.getUser().getId());
         System.out.println(response);
 	}
 
@@ -122,7 +122,7 @@ public class App {
         do {
            amount = consoleService.promptForBigDecimal("Enter amount to transfer: ");
         }while(amount.compareTo(BigDecimal.ZERO) <= 0 &&
-                amount.compareTo(accountService.getBalanceByAccountId(currentUser.getUser().getId())) > 0);
+                amount.compareTo(accountService.getBalanceById(currentUser.getUser().getId())) > 0);
 
         Transfer newTransfer = new Transfer(currentUser.getUser().getId(), userId, amount, 2, 2);
         Transfer receivedTransfer = transferService.transfer(newTransfer);

@@ -23,7 +23,7 @@ public class AccountService {
         this.restTemplate = new RestTemplate();
     }
 
-    public BigDecimal getBalanceByAccountId(int userId){
+    public BigDecimal getBalanceById(int userId){
         BigDecimal balance = null;
         HttpEntity<Void> entity = makeAuthEntity();
         try{
