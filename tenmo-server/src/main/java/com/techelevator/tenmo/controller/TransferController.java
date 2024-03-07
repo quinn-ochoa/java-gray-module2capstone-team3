@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class TransferController {
 
-//    @RequestMapping(path = "", method = RequestMethod.POST)
-//    public Transfer transfer(){
-//
-//    }
+    @RequestMapping(path = "", method = RequestMethod.POST)
+    public Transfer transfer(){
+
+    }
 }

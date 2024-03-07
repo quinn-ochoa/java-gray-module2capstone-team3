@@ -8,4 +8,5 @@ public interface AccountDao {
     public BigDecimal getBalanceById(int id);
     public BigDecimal updateBalanceById(int id);
     public Account updateAccount(Account account);
+    public Account makeAccountObjectByUserId(int id);
 }

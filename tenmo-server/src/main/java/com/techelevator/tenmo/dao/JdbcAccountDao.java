@@ -45,19 +45,6 @@ public class JdbcAccountDao implements AccountDao {
         return null;
     }
 
-    public boolean transfer(Account fromUser, Account toUser, BigDecimal amount, int transferType) {
-        boolean success = false;
-        fromUser.setBalance(fromUser.getBalance().subtract(amount));
-        toUser.setBalance(toUser.getBalance().add(amount));
-        updateAccount(fromUser);
-        updateAccount(toUser);
-        // TODO update to accept dynamic transferStatus
-        Transfer transfer = new Transfer(fromUser.getUserId(), toUser.getUserId(), amount, transferType, 2);
-        success = true;
-        // TODO create createTransfer
-        return success;
-    }
-
     @Override
     public Account updateAccount(Account account) {
         Account updatedAccount = null;
@@ -82,6 +69,17 @@ public class JdbcAccountDao implements AccountDao {
         }
 
         return updatedAccount;
+    }
+
+    @Override
+    public Account makeAccountObjectByUserId(int id){
+        Account account = null;
+        String sql = "SELECT * FROM account WHERE user_id = ?";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, id);
+        if(results.next()){
+            account = mapRowToAccount(results);
+        }
+            return account;
     }
 
 
