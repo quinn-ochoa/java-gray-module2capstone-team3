@@ -1,11 +1,13 @@
 package com.techelevator.tenmo;
 
 import com.techelevator.tenmo.model.AuthenticatedUser;
+import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.User;
 import com.techelevator.tenmo.model.UserCredentials;
 import com.techelevator.tenmo.services.AccountService;
 import com.techelevator.tenmo.services.AuthenticationService;
 import com.techelevator.tenmo.services.ConsoleService;
+import com.techelevator.tenmo.services.TransferService;
 
 import java.math.BigDecimal;
 
@@ -16,6 +18,7 @@ public class App {
     private final ConsoleService consoleService = new ConsoleService();
     private final AuthenticationService authenticationService = new AuthenticationService(API_BASE_URL);
     private final AccountService accountService = new AccountService(API_BASE_URL);
+    private final TransferService transferService = new TransferService(API_BASE_URL);
 
     private AuthenticatedUser currentUser;
 
@@ -64,6 +67,7 @@ public class App {
             consoleService.printErrorMessage();
         } else {
             accountService.setToken(currentUser.getToken());
+            transferService.setToken(currentUser.getToken());
         }
     }
 
@@ -114,7 +118,15 @@ public class App {
             userId = consoleService.promptForInt("Enter ID of user you are sending to (0 to cancel): ");
         }
         while (userId == currentUser.getUser().getId());
-        BigDecimal amount = consoleService.promptForBigDecimal("Enter amount to transfer: ");
+        BigDecimal amount = null;
+        do {
+           amount = consoleService.promptForBigDecimal("Enter amount to transfer: ");
+        }while(amount.compareTo(BigDecimal.ZERO) > 0 &&
+                amount.compareTo(accountService.getBalanceByAccountId(currentUser.getUser().getId())) <= 0);
+
+        Transfer newTransfer = new Transfer(currentUser.getUser().getId(), userId, amount, 2, 2);
+        Transfer receivedTransfer = transferService.transfer(newTransfer);
+        System.out.println("You transferred $" + receivedTransfer.getAmount() + " to this account: " + receivedTransfer.getAccountToId());
 
 	}
 
