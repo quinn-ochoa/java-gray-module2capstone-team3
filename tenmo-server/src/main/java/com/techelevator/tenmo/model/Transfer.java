@@ -1,12 +1,23 @@
 package com.techelevator.tenmo.model;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 
 public class Transfer {
+
+//    @NotBlank(message = "must have an accountFromID.")
     private int accountFromId;
+
+//    @NotBlank(message = "must have an accountToID.")
     private int accountToId;
+
     private BigDecimal amount;
+
+//    @NotBlank(message = "must have a transferType.")
     private int transferType;
+
+//    @NotBlank(message = "must have a transferStatus.")
     private int transferStatus;
 
     public Transfer() {}

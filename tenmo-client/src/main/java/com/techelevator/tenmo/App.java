@@ -121,8 +121,8 @@ public class App {
         BigDecimal amount = null;
         do {
            amount = consoleService.promptForBigDecimal("Enter amount to transfer: ");
-        }while(amount.compareTo(BigDecimal.ZERO) > 0 &&
-                amount.compareTo(accountService.getBalanceByAccountId(currentUser.getUser().getId())) <= 0);
+        }while(amount.compareTo(BigDecimal.ZERO) <= 0 &&
+                amount.compareTo(accountService.getBalanceByAccountId(currentUser.getUser().getId())) > 0);
 
         Transfer newTransfer = new Transfer(currentUser.getUser().getId(), userId, amount, 2, 2);
         Transfer receivedTransfer = transferService.transfer(newTransfer);

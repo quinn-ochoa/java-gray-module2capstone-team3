@@ -22,7 +22,7 @@ public class TransferService {
     public Transfer transfer(Transfer transfer){
         Transfer returnedTransfer = null;
         try{
-            ResponseEntity<Transfer> response = restTemplate.exchange(BASE_URL, HttpMethod.POST,makeTransferEntity(transfer), Transfer.class);
+            ResponseEntity<Transfer> response = restTemplate.exchange(BASE_URL, HttpMethod.POST, makeTransferEntity(transfer), Transfer.class);
             returnedTransfer = response.getBody();
         } catch (RestClientResponseException | ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
