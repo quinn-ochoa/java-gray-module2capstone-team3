@@ -4,6 +4,8 @@ import com.techelevator.tenmo.dao.AccountDao;
 import com.techelevator.tenmo.dao.TransferDao;
 import com.techelevator.tenmo.dao.UserDao;
 import com.techelevator.tenmo.exception.DaoException;
+import com.techelevator.tenmo.model.Account;
+import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,12 +32,12 @@ public class AccountController {
         this.transferDao = transferDao;
     }
     @RequestMapping(path = "{id}", method = RequestMethod.GET)
-    public BigDecimal getBalance(@PathVariable int id){
-        BigDecimal balance = accountDao.getBalanceById(id);
-        if(balance == null){
+    public Account getAccount(@PathVariable int id){
+        Account account = accountDao.getAccountById(id);
+        if(account == null){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account number not found");
         }
-        return balance;
+        return account;
     }
     @RequestMapping(path = "", method = RequestMethod.GET)
     public User[] getUsers() {
@@ -46,6 +48,17 @@ public class AccountController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to get list of user accounts." + e.getMessage());
         }
         return users;
+    }
+
+    @RequestMapping(path = "{id}/transfers", method = RequestMethod.GET)
+    public Transfer[] getTransfersByAccountId(@PathVariable int id) {
+        Transfer[] transfers = null;
+        try {
+            transfers = transferDao.getTransfersByAccountId(id).toArray(new Transfer[0]);
+        } catch (DaoException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to get list of transfers." + e.getMessage());
+        }
+        return transfers;
     }
 
 }

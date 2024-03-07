@@ -21,6 +21,7 @@ public class App {
     private final TransferService transferService = new TransferService(API_BASE_URL);
 
     private AuthenticatedUser currentUser;
+    private int currentUserId;
 
     public static void main(String[] args) {
         App app = new App();
@@ -31,6 +32,7 @@ public class App {
         consoleService.printGreeting();
         loginMenu();
         if (currentUser != null) {
+            currentUserId = currentUser.getUser().getId();
             mainMenu();
         }
     }
@@ -96,12 +98,14 @@ public class App {
     }
 
 	private void viewCurrentBalance() {
-		BigDecimal response = accountService.getBalanceById(currentUser.getUser().getId());
+		BigDecimal response = accountService.getAccountById(currentUserId).getBalance();
         System.out.println(response);
 	}
 
 	private void viewTransferHistory() {
 		// TODO Auto-generated method stub
+        int accountId = accountService.getAccountById(currentUserId).getAccountId();
+        Transfer[] transfers = accountService.getTransfersByAccountId(accountId);
 		
 	}
 
@@ -122,9 +126,9 @@ public class App {
         do {
            amount = consoleService.promptForBigDecimal("Enter amount to transfer: ");
         }while(amount.compareTo(BigDecimal.ZERO) <= 0 &&
-                amount.compareTo(accountService.getBalanceById(currentUser.getUser().getId())) > 0);
+                amount.compareTo(accountService.getAccountById(currentUserId).getBalance()) > 0);
 
-        Transfer newTransfer = new Transfer(currentUser.getUser().getId(), userId, amount, 2, 2);
+        Transfer newTransfer = new Transfer(currentUserId, userId, amount, 2, 2);
         Transfer receivedTransfer = transferService.transfer(newTransfer);
         System.out.println("You transferred $" + receivedTransfer.getAmount() + " to this account: " + receivedTransfer.getAccountToId());
 

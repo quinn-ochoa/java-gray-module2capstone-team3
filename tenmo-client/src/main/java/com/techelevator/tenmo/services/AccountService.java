@@ -1,5 +1,7 @@
 package com.techelevator.tenmo.services;
 
+import com.techelevator.tenmo.model.Account;
+import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.User;
 import com.techelevator.util.BasicLogger;
 import org.springframework.http.HttpEntity;
@@ -23,17 +25,17 @@ public class AccountService {
         this.restTemplate = new RestTemplate();
     }
 
-    public BigDecimal getBalanceById(int userId){
-        BigDecimal balance = null;
+    public Account getAccountById(int userId){
+        Account account = null;
         HttpEntity<Void> entity = makeAuthEntity();
         try{
-            ResponseEntity<BigDecimal> response = restTemplate.exchange(BASE_URL + userId, HttpMethod.GET,
-                    entity, BigDecimal.class);
-            balance = response.getBody();
+            ResponseEntity<Account> response = restTemplate.exchange(BASE_URL + userId, HttpMethod.GET,
+                    entity, Account.class);
+            account = response.getBody();
         } catch (RestClientResponseException | ResourceAccessException e){
             BasicLogger.log(e.getMessage());
         }
-        return balance;
+        return account;
     }
 
     public User[] getUsers() {
@@ -51,7 +53,19 @@ public class AccountService {
         return users;
     }
 
+    //view transfer history
+    public Transfer[] getTransfersByAccountId(int id){
+        Transfer[] transfers = null;
+        HttpEntity<Void> entity = makeAuthEntity();
+        try {
+            ResponseEntity<Transfer[]> response = restTemplate.exchange(BASE_URL + id + "/transfers", HttpMethod.GET, entity, Transfer[].class);
+            transfers = response.getBody();
+        } catch (RestClientResponseException | ResourceAccessException e) {
+            BasicLogger.log(e.getMessage());
+        }
 
+        return transfers;
+    }
 
 
     private HttpEntity<Void> makeAuthEntity() {

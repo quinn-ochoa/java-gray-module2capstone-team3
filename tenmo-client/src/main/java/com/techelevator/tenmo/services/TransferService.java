@@ -32,8 +32,6 @@ public class TransferService {
 
 
 
-    //view transfer history
-
 
     public HttpEntity<Transfer> makeTransferEntity(Transfer transfer){
         HttpHeaders headers = new HttpHeaders();
