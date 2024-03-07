@@ -106,6 +106,13 @@ public class App {
 		// TODO Auto-generated method stub
         int accountId = accountService.getAccountById(currentUserId).getAccountId();
         Transfer[] transfers = accountService.getTransfersByAccountId(accountId);
+        for(Transfer transfer : transfers){
+            //TODO need access to transfer ID
+            System.out.println("From: " + transfer.getAccountFromId());
+            System.out.println("To: " + transfer.getAccountToId());
+            System.out.println("Amount: " + transfer.getAmount());
+            consoleService.promptForInt("Please enter transfer id: (0 to cancel)");
+        }
 		
 	}
 
