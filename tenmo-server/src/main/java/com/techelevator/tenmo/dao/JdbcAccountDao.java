@@ -29,18 +29,10 @@ public class JdbcAccountDao implements AccountDao {
             if(results.next()){
                 account = mapRowToAccount(results);
             }
-            //balance = jdbcTemplate.queryForObject(sql, BigDecimal.class, id);
         } catch(CannotGetJdbcConnectionException e){
             throw new DaoException("Unable to connect to server or database", e);
         }
         return account;
-    }
-
-    @Override
-    public BigDecimal updateBalanceById(int id) {
-
-
-        return null;
     }
 
     @Override

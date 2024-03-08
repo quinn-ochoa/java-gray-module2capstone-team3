@@ -6,6 +6,8 @@ import java.math.BigDecimal;
 
 public class Transfer {
 
+    private int id;
+
 //    @NotBlank(message = "must have an accountFromID.")
     private int accountFromId;
 
@@ -20,6 +22,10 @@ public class Transfer {
 //    @NotBlank(message = "must have a transferStatus.")
     private int transferStatus;
 
+    private String accountFromUsername;
+
+    private String accountToUsername;
+
     public Transfer() {}
 
     public Transfer(int accountFromId, int accountToId, BigDecimal amount, int transferType, int transferStatus) {
@@ -28,6 +34,37 @@ public class Transfer {
         this.amount = amount;
         this.transferType = transferType;
         this.transferStatus = transferStatus;
+    }
+
+    public Transfer(int accountFromId, String accountFromUsername, int accountToId, String accountToUsername, BigDecimal amount, int transferType, int transferStatus) {
+        this.accountFromUsername = accountFromUsername;
+        this.accountFromId = accountFromId;
+        this.accountToId = accountToId;
+        this.accountToUsername = accountToUsername;
+        this.amount = amount;
+        this.transferType = transferType;
+        this.transferStatus = transferStatus;
+    }
+    public int getId(){
+        return id;
+    }
+    public void setId(int id){
+        this.id = id;
+    }
+    public String getAccountFromUsername() {
+        return accountFromUsername;
+    }
+
+    public void setAccountFromUsername(String accountFromUsername) {
+        this.accountFromUsername = accountFromUsername;
+    }
+
+    public String getAccountToUsername() {
+        return accountToUsername;
+    }
+
+    public void setAccountToUsername(String accountToUsername) {
+        this.accountToUsername = accountToUsername;
     }
 
     public int getAccountFromId() {

@@ -102,19 +102,56 @@ public class App {
         System.out.println(response);
 	}
 
-	private void viewTransferHistory() {
-		// TODO Auto-generated method stub
+    private void viewTransferHistory() {
+        // TODO Auto-generated method stub
+        User[] users = accountService.getUsers();
+//        User toUser;
+//        User fromUser;
         int accountId = accountService.getAccountById(currentUserId).getAccountId();
         Transfer[] transfers = accountService.getTransfersByAccountId(accountId);
+        System.out.println("\nTransfers: ");
         for(Transfer transfer : transfers){
             //TODO need access to transfer ID
-            System.out.println("From: " + transfer.getAccountFromId());
-            System.out.println("To: " + transfer.getAccountToId());
+            System.out.println("ID: " + transfer.getTransferId());
+            System.out.println("From: " + transfer.getAccountFromUsername()); //should be account name
+            System.out.println("To: " + transfer.getAccountToUsername()); //should be account name
             System.out.println("Amount: " + transfer.getAmount());
-            consoleService.promptForInt("Please enter transfer id: (0 to cancel)");
         }
-		
-	}
+        int input = consoleService.promptForInt("Please enter transfer id (0 to cancel): ");
+
+        if (input == 0){
+            mainMenu();
+        } else {
+            System.out.println("\nTransfer Details: ");
+            for(Transfer transfer : transfers){
+                if(input == transfer.getTransferId()) {
+                    System.out.println("ID: " + transfer.getTransferId());
+                    System.out.println("From: " + transfer.getAccountFromUsername()); //should be account name
+                    System.out.println("To: " + transfer.getAccountToUsername()); //should be account name
+                    System.out.println("Type: " + transfer.getTransferType());
+                    System.out.println("Status: " + transfer.getTransferStatus());
+                    System.out.println("Amount: $" + transfer.getAmount());
+                } else {
+                    mainMenu();
+                }
+            }
+
+        }
+    }
+
+//	private void viewTransferHistory() {
+//		// TODO Auto-generated method stub
+//        int accountId = accountService.getAccountById(currentUserId).getAccountId();
+//        Transfer[] transfers = accountService.getTransfersByAccountId(accountId);
+//        for(Transfer transfer : transfers){
+//            //TODO need access to transfer ID
+//            System.out.println("From: " + transfer.getAccountFromId());
+//            System.out.println("To: " + transfer.getAccountToId());
+//            System.out.println("Amount: " + transfer.getAmount());
+//            consoleService.promptForInt("Please enter transfer id: (0 to cancel)");
+//        }
+//
+//	}
 
 	private void viewPendingRequests() {
 		// TODO Auto-generated method stub
@@ -123,6 +160,7 @@ public class App {
 
 	private void sendBucks() {
 		User[] users = accountService.getUsers();
+
         consoleService.displayOtherUsers(users, currentUser.getUser());
         int userId;
         do {
