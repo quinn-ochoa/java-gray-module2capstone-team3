@@ -48,7 +48,7 @@ public class JdbcAccountDao implements AccountDao {
                 throw new DaoException("Zero rows affected, expected at least one");
             }
             else {
-                updatedAccount = null; //TODO makes getAccountById
+                updatedAccount = getAccountById(account.getUserId());
             }
         }
         catch (CannotGetJdbcConnectionException e) {

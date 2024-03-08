@@ -103,7 +103,7 @@ public class App {
 	}
 
     private void viewTransferHistory() {
-        // TODO Auto-generated method stub
+
         User[] users = accountService.getUsers();
 //        User toUser;
 //        User fromUser;
@@ -111,7 +111,6 @@ public class App {
         Transfer[] transfers = accountService.getTransfersByAccountId(accountId);
         System.out.println("\nTransfers: ");
         for(Transfer transfer : transfers){
-            //TODO need access to transfer ID
             System.out.print("ID: " + transfer.getTransferId());
             boolean isCurrentUserFromId = accountId == transfer.getAccountFromId();
             System.out.print((isCurrentUserFromId) ? (" To: ") : (" From: "));
@@ -139,51 +138,49 @@ public class App {
         }
     }
 
-//	private void viewTransferHistory() {
-//		// TODO Auto-generated method stub
-//        int accountId = accountService.getAccountById(currentUserId).getAccountId();
-//        Transfer[] transfers = accountService.getTransfersByAccountId(accountId);
-//        for(Transfer transfer : transfers){
-//            //TODO need access to transfer ID
-//            System.out.println("From: " + transfer.getAccountFromId());
-//            System.out.println("To: " + transfer.getAccountToId());
-//            System.out.println("Amount: " + transfer.getAmount());
-//            consoleService.promptForInt("Please enter transfer id: (0 to cancel)");
-//        }
-//
-//	}
-
     private void viewPendingRequests() {
-        // TODO Auto-generated method stub
         int accountId = accountService.getAccountById(currentUserId).getAccountId();
         Transfer[] transfers = accountService.getTransfersByAccountId(accountId);
         System.out.println("\nPending Transfers: ");
         for(Transfer transfer : transfers){
-            if (transfer.getTransferStatus() == 1) {
+            if (transfer.getTransferStatus() == 1 && transfer.getAccountFromId() == accountId) {
                 System.out.println("ID: " + transfer.getTransferId());
                 System.out.println("To: " + transfer.getAccountToUsername()); //should be account name
                 System.out.println("Amount: " + transfer.getAmount());
             }
         }
         int input = consoleService.promptForInt("\nPlease enter transfer ID to approve/reject (0 to cancel): ");
-        int userChoice = 0;
+        Transfer userChoice = null;
 
         if(input == 0) {
             mainMenu();
         } else {
             for(Transfer transfer : transfers){
                 if(input == transfer.getTransferId()) {
-                    userChoice = transfer.getTransferId();
+                    userChoice = transfer;
                 }
             }
-            if(userChoice != 0) {
+            if(userChoice != null) {
                 System.out.println("1: Approve ");
                 System.out.println("2: Reject ");
                 System.out.println("0: Don't approve or reject ");
                 System.out.println("----------------------");
                 input = consoleService.promptForInt("\nPlease choose an option: ");
-
+                if (input == 0) {
+                    System.out.println("Okay, returning to main menu.");
+                    mainMenu();
+                }
+                else if(input == 1 || input == 2) {
+                    userChoice.setTransferStatus(input+1);
+                    transferService.approveOrRejectTransfer(userChoice);
+                }
+                else {
+                    System.out.println("Invalid entry. Returning to main menu.");
+                    mainMenu();
+                }
             }
+
+
         }
     }
 
@@ -209,7 +206,6 @@ public class App {
 	}
 
     private void requestBucks() {
-        // TODO Auto-generated method stub
         User[] users = accountService.getUsers();
         consoleService.displayOtherUsers(users, currentUser.getUser());
         int userId;

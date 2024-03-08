@@ -13,12 +13,11 @@ public class TransferService {
     private final RestTemplate restTemplate;
     private String token;
     public TransferService(String BASE_URL){
-        this.BASE_URL = BASE_URL + "/transfers/";
+        this.BASE_URL = BASE_URL + "transfers/";
         this.restTemplate = new RestTemplate();
 
     }
 
-    //send and request transfer
     public Transfer transfer(Transfer transfer){
         Transfer returnedTransfer = null;
         try{
@@ -30,7 +29,17 @@ public class TransferService {
         return  returnedTransfer;
     }
 
+    public Transfer approveOrRejectTransfer(Transfer transfer){
+        Transfer requestedTransfer = null;
 
+        try {
+            ResponseEntity<Transfer> response = restTemplate.exchange(BASE_URL + "request/" + transfer.getTransferId(), HttpMethod.PUT, makeTransferEntity(transfer), Transfer.class);
+            requestedTransfer = response.getBody();
+        } catch (RestClientResponseException | ResourceAccessException e) {
+            BasicLogger.log(e.getMessage());
+        }
+        return  requestedTransfer;
+    }
 
 
     public HttpEntity<Transfer> makeTransferEntity(Transfer transfer){

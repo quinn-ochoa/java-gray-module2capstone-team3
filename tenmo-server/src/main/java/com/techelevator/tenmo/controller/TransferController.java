@@ -5,15 +5,12 @@ import com.techelevator.tenmo.dao.TransferDao;
 import com.techelevator.tenmo.dao.UserDao;
 import com.techelevator.tenmo.model.Transfer;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 @PreAuthorize("isAuthenticated()")
-@RequestMapping(path = "/transfers/")
+@RequestMapping(path = "transfers/")
 @RestController
 public class TransferController {
 
@@ -32,6 +29,10 @@ public class TransferController {
         return transferDao.transfer(transfer);
     }
 
-
+    @RequestMapping(path = "request/{transferId}", method = RequestMethod.PUT)
+    public Transfer updateTransferStatus(@RequestBody Transfer transfer ,@PathVariable int transferId) {
+        transfer.setTransferId(transferId);
+        return transferDao.transfer(transfer);
+    }
 
 }

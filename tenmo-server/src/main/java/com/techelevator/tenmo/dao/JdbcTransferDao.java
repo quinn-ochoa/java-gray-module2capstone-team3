@@ -16,6 +16,7 @@ import java.util.List;
 
 @Component
 public class JdbcTransferDao implements TransferDao{
+
     private final JdbcTemplate jdbcTemplate;
     private AccountDao accountDao;
 
@@ -25,7 +26,16 @@ public class JdbcTransferDao implements TransferDao{
     }
     @Override
     public Transfer transfer(Transfer transfer) {
-        if(transfer.getTransferType() == 2){
+
+        //say we have a transfer with status = approved, type = request
+        //in the DB, we want to update both accounts related to the transfer and then update the transfer
+
+        boolean isPending = transfer.getTransferStatus() == 1;  //false
+        boolean isSending = (transfer.getTransferType() == 2);  //false
+        boolean isApproved = transfer.getTransferStatus() == 2; //true
+        boolean isRequest = transfer.getTransferType() == 1;    //true
+
+        if (isSending || (isRequest && isApproved)){
             Account fromUser = accountDao.makeAccountObjectByUserId(transfer.getAccountFromId());
             Account toUser = accountDao.makeAccountObjectByUserId(transfer.getAccountToId());
             fromUser.setBalance(fromUser.getBalance().subtract(transfer.getAmount()));
@@ -35,8 +45,54 @@ public class JdbcTransferDao implements TransferDao{
         }
 
         // TODO update to accept dynamic transferStatus
-        return createTransfer(transfer);
+        //Transfer status: 1 - pending 2 - approved 3 - rejected
+        //Transfer type  : 1 - request 2 - sending
+
+        if (isPending || isSending) {
+            return createTransfer(transfer);
+        }
+        /*
+        type     status
+        1           1   pending/request   happens ^^^
+        1           2   pending/sending   CANT HAPPEN
+        2           1   approved/request  doesnt get caught, want to update
+        2           2   approved/sending  happens ^^^
+        3           1   rejected/request  doesnt get caught, want to update
+        3           2   rejected/sending  CANT HAPPEN
+         */
+
+        else {
+            return updateTransfer(transfer);
+        }
     }
+
+    @Override
+    public Transfer updateTransfer(Transfer transfer) {
+
+        Transfer updatedTransfer = null;
+        String sql = "UPDATE transfer SET transfer_status = ? WHERE transfer_id = ?;";
+
+        try {
+            int numberOfRows = jdbcTemplate.update(sql,
+                    transfer.getTransferStatus(), transfer.getTransferId());
+            if (numberOfRows == 0) {
+                throw new DaoException("Zero rows affected, expected at least one");
+            }
+            else {
+                updatedTransfer = getTransferById(transfer.getTransferId());
+            }
+        }
+        catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
+        }
+        catch (DataIntegrityViolationException e) {
+            throw new DaoException("Data integrity violation", e);
+        }
+
+        return updatedTransfer;
+    }
+
+
     @Override
     public Transfer createTransfer(Transfer transfer) {
         Transfer createdTransfer = null;

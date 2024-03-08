@@ -11,4 +11,5 @@ public interface TransferDao {
     public Transfer createTransfer(Transfer transfer);
     public Transfer getTransferById(int id);
     public List<Transfer> getTransfersByAccountId(int id);
+    public Transfer updateTransfer(Transfer transfer);
 }

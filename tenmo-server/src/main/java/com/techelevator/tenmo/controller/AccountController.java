@@ -18,7 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.math.BigDecimal;
 
 @PreAuthorize("isAuthenticated()")
-@RequestMapping(path = "/accounts/")
+@RequestMapping(path = "accounts/")
 @RestController
 public class AccountController {
 

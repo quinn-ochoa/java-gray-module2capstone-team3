@@ -20,8 +20,9 @@ public class AccountService {
     private final String BASE_URL;
     private final RestTemplate restTemplate;
     private String token; // token set in handleLogin() in App.java (should be set when user logs in)
+
     public AccountService(String BASE_URL){
-        this.BASE_URL = BASE_URL + "/accounts/";
+        this.BASE_URL = BASE_URL + "accounts/";
         this.restTemplate = new RestTemplate();
     }
 
