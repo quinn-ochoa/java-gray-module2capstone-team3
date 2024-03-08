@@ -112,10 +112,12 @@ public class App {
         System.out.println("\nTransfers: ");
         for(Transfer transfer : transfers){
             //TODO need access to transfer ID
-            System.out.println("ID: " + transfer.getTransferId());
-            System.out.println("From: " + transfer.getAccountFromUsername()); //should be account name
-            System.out.println("To: " + transfer.getAccountToUsername()); //should be account name
-            System.out.println("Amount: " + transfer.getAmount());
+            System.out.print("ID: " + transfer.getTransferId());
+            boolean isCurrentUserFromId = accountId == transfer.getAccountFromId();
+            System.out.print((isCurrentUserFromId) ? (" To: ") : (" From: "));
+            System.out.print((isCurrentUserFromId) ? (transfer.getAccountToId()) : (transfer.getAccountFromId()));
+            //TODO replace account number in prev line w/ username
+            System.out.println(" Amount: " + transfer.getAmount());
         }
         int input = consoleService.promptForInt("Please enter transfer id (0 to cancel): ");
 
@@ -126,16 +128,14 @@ public class App {
             for(Transfer transfer : transfers){
                 if(input == transfer.getTransferId()) {
                     System.out.println("ID: " + transfer.getTransferId());
-                    System.out.println("From: " + transfer.getAccountFromUsername()); //should be account name
-                    System.out.println("To: " + transfer.getAccountToUsername()); //should be account name
+//                    System.out.println("From: " + transfer.getAccountFromUsername()); //should be account name
+//                    System.out.println("To: " + transfer.getAccountToUsername()); //should be account name
                     System.out.println("Type: " + transfer.getTransferType());
                     System.out.println("Status: " + transfer.getTransferStatus());
                     System.out.println("Amount: $" + transfer.getAmount());
-                } else {
-                    mainMenu();
                 }
             }
-
+            mainMenu();
         }
     }
 
@@ -153,10 +153,39 @@ public class App {
 //
 //	}
 
-	private void viewPendingRequests() {
-		// TODO Auto-generated method stub
-		
-	}
+    private void viewPendingRequests() {
+        // TODO Auto-generated method stub
+        int accountId = accountService.getAccountById(currentUserId).getAccountId();
+        Transfer[] transfers = accountService.getTransfersByAccountId(accountId);
+        System.out.println("\nPending Transfers: ");
+        for(Transfer transfer : transfers){
+            if (transfer.getTransferStatus() == 1) {
+                System.out.println("ID: " + transfer.getTransferId());
+                System.out.println("To: " + transfer.getAccountToUsername()); //should be account name
+                System.out.println("Amount: " + transfer.getAmount());
+            }
+        }
+        int input = consoleService.promptForInt("\nPlease enter transfer ID to approve/reject (0 to cancel): ");
+        int userChoice = 0;
+
+        if(input == 0) {
+            mainMenu();
+        } else {
+            for(Transfer transfer : transfers){
+                if(input == transfer.getTransferId()) {
+                    userChoice = transfer.getTransferId();
+                }
+            }
+            if(userChoice != 0) {
+                System.out.println("1: Approve ");
+                System.out.println("2: Reject ");
+                System.out.println("0: Don't approve or reject ");
+                System.out.println("----------------------");
+                input = consoleService.promptForInt("\nPlease choose an option: ");
+
+            }
+        }
+    }
 
 	private void sendBucks() {
 		User[] users = accountService.getUsers();
@@ -179,9 +208,22 @@ public class App {
 
 	}
 
-	private void requestBucks() {
-		// TODO Auto-generated method stub
-		
-	}
+    private void requestBucks() {
+        // TODO Auto-generated method stub
+        User[] users = accountService.getUsers();
+        consoleService.displayOtherUsers(users, currentUser.getUser());
+        int userId;
+        do {
+            userId = consoleService.promptForInt("Enter ID of user you are requesting from (0 to cancel): ");
+        }
+        while (userId == currentUser.getUser().getId());
+        BigDecimal amount = null;
+        do {
+            amount = consoleService.promptForBigDecimal("Enter amount to request: ");
+        }while(amount.compareTo(BigDecimal.ZERO) <= 0);
 
+        Transfer newTransfer = new Transfer(userId, currentUserId, amount, 1, 1);
+        Transfer receivedTransfer = transferService.transfer(newTransfer);
+        System.out.println("You requested $" + receivedTransfer.getAmount() + " from this account: " + receivedTransfer.getAccountToId());
+    }
 }

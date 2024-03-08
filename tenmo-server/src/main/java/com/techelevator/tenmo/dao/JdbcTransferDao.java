@@ -25,12 +25,15 @@ public class JdbcTransferDao implements TransferDao{
     }
     @Override
     public Transfer transfer(Transfer transfer) {
-        Account fromUser = accountDao.makeAccountObjectByUserId(transfer.getAccountFromId());
-        Account toUser = accountDao.makeAccountObjectByUserId(transfer.getAccountToId());
-        fromUser.setBalance(fromUser.getBalance().subtract(transfer.getAmount()));
-        toUser.setBalance(toUser.getBalance().add(transfer.getAmount()));
-        accountDao.updateAccount(fromUser);
-        accountDao.updateAccount(toUser);
+        if(transfer.getTransferType() == 2){
+            Account fromUser = accountDao.makeAccountObjectByUserId(transfer.getAccountFromId());
+            Account toUser = accountDao.makeAccountObjectByUserId(transfer.getAccountToId());
+            fromUser.setBalance(fromUser.getBalance().subtract(transfer.getAmount()));
+            toUser.setBalance(toUser.getBalance().add(transfer.getAmount()));
+            accountDao.updateAccount(fromUser);
+            accountDao.updateAccount(toUser);
+        }
+
         // TODO update to accept dynamic transferStatus
         return createTransfer(transfer);
     }
@@ -85,7 +88,7 @@ public class JdbcTransferDao implements TransferDao{
 
     public Transfer mapRowToTransfer(SqlRowSet rowSet) {
         Transfer transfer = new Transfer();
-        transfer.setId(rowSet.getInt("transfer_id"));
+        transfer.setTransferId(rowSet.getInt("transfer_id"));
         transfer.setAccountFromId(rowSet.getInt("account_from"));
         transfer.setAccountToId(rowSet.getInt("account_to"));
         transfer.setAmount(rowSet.getBigDecimal("amount"));
@@ -96,7 +99,7 @@ public class JdbcTransferDao implements TransferDao{
 
     public Transfer mapRowToTransfer(SqlRowSet rowSet, String toUsername, String fromUsername) {
         Transfer transfer = new Transfer();
-        transfer.setId(rowSet.getInt("transfer_id"));
+//        transfer.setId(rowSet.getInt("transfer_id"));
         transfer.setAccountFromId(rowSet.getInt("account_from"));
         transfer.setAccountToId(rowSet.getInt("account_to"));
         transfer.setAmount(rowSet.getBigDecimal("amount"));

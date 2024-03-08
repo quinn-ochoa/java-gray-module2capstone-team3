@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 
 public class Transfer {
 
-    private int id;
+    private int transferId;
 
 //    @NotBlank(message = "must have an accountFromID.")
     private int accountFromId;
@@ -45,11 +45,11 @@ public class Transfer {
         this.transferType = transferType;
         this.transferStatus = transferStatus;
     }
-    public int getId(){
-        return id;
+    public int getTransferId(){
+        return transferId;
     }
-    public void setId(int id){
-        this.id = id;
+    public void setTransferId(int transferId){
+        this.transferId = transferId;
     }
     public String getAccountFromUsername() {
         return accountFromUsername;
