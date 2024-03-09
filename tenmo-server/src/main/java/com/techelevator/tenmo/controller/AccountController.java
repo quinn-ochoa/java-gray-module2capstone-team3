@@ -61,4 +61,9 @@ public class AccountController {
         return transfers;
     }
 
+    @RequestMapping(path = "users/{accountId}", method = RequestMethod.GET)
+    public User getUserByAccountId(@PathVariable int accountId){
+        return userDao.getUserByAccountId(accountId);
+    }
+
 }

@@ -65,6 +65,19 @@ public class AccountService {
         return null;
     }
 
+    public User getUserByAccountId(int accountId){
+        User user = null;
+        HttpEntity<Void> entity = makeAuthEntity();
+        try{
+            ResponseEntity<User> response = restTemplate.exchange(BASE_URL + "users/" + accountId, HttpMethod.GET, entity, User.class);
+            user = response.getBody();
+        } catch (RestClientResponseException | ResourceAccessException e) {
+            BasicLogger.log(e.getMessage());
+        }
+
+        return user;
+    }
+
     //view transfer history
     public Transfer[] getTransfersByAccountId(int id){
         Transfer[] transfers = null;

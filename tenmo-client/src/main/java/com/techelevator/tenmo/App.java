@@ -105,8 +105,8 @@ public class App {
     private void viewTransferHistory() {
 
         User[] users = accountService.getUsers();
-//        User toUser;
-//        User fromUser;
+        String toUsername;
+        String fromUsername;
         int accountId = accountService.getAccountById(currentUserId).getAccountId();
         Transfer[] transfers = accountService.getTransfersByAccountId(accountId);
         System.out.println("\nTransfers: ");
@@ -114,9 +114,10 @@ public class App {
             System.out.print("ID: " + transfer.getTransferId());
             boolean isCurrentUserFromId = accountId == transfer.getAccountFromId();
             System.out.print((isCurrentUserFromId) ? (" To: ") : (" From: "));
-            System.out.print((isCurrentUserFromId) ? (transfer.getAccountToId()) : (transfer.getAccountFromId()));
-            //TODO replace account number in prev line w/ username
-            System.out.println(" Amount: " + transfer.getAmount());
+            toUsername = accountService.getUserByAccountId(transfer.getAccountToId()).getUsername();
+            fromUsername = accountService.getUserByAccountId(transfer.getAccountFromId()).getUsername();
+            System.out.print((isCurrentUserFromId) ? toUsername : fromUsername);
+            System.out.println(" Amount: $" + transfer.getAmount());
         }
         int input = consoleService.promptForInt("Please enter transfer id (0 to cancel): ");
 
@@ -126,9 +127,11 @@ public class App {
             System.out.println("\nTransfer Details: ");
             for(Transfer transfer : transfers){
                 if(input == transfer.getTransferId()) {
+                    toUsername = accountService.getUserByAccountId(transfer.getAccountToId()).getUsername();
+                    fromUsername = accountService.getUserByAccountId(transfer.getAccountFromId()).getUsername();
                     System.out.println("ID: " + transfer.getTransferId());
-//                    System.out.println("From: " + transfer.getAccountFromUsername()); //should be account name
-//                    System.out.println("To: " + transfer.getAccountToUsername()); //should be account name
+                    System.out.println("From: " + fromUsername);
+                    System.out.println("To: " + toUsername);
                     System.out.println("Type: " + transfer.getTransferType());
                     System.out.println("Status: " + transfer.getTransferStatus());
                     System.out.println("Amount: $" + transfer.getAmount());
@@ -149,8 +152,8 @@ public class App {
         for(Transfer transfer : transfers){
             if (transfer.getTransferStatus() == 1 && transfer.getAccountFromId() == accountId) {
                 System.out.println("ID: " + transfer.getTransferId());
-                System.out.println("To: " ); //TODO implement getUsernameById() method
-                System.out.println("Amount: " + transfer.getAmount());
+                System.out.println("From: " + accountService.getUserByAccountId(transfer.getAccountToId()).getUsername());
+                System.out.println("Amount: $" + transfer.getAmount());
             }
         }
         int input = consoleService.promptForInt("\nPlease enter transfer ID to approve/reject (0 to cancel): ");
