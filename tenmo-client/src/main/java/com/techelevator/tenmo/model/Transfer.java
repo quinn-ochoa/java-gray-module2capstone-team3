@@ -9,7 +9,18 @@ public class Transfer {
     private int accountToId;
 //    private String accountToUsername;
     private BigDecimal amount;
+
+    /*
+    1 - Request
+    2 - Send
+     */
     private int transferType;
+
+    /*
+    1 - Pending
+    2 - Approved
+    3 - Rejected
+     */
     private int transferStatus;
 
     public Transfer() {}

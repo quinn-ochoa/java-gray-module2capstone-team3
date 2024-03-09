@@ -132,8 +132,8 @@ public class App {
                     System.out.println("ID: " + transfer.getTransferId());
                     System.out.println("From: " + fromUsername);
                     System.out.println("To: " + toUsername);
-                    System.out.println("Type: " + transfer.getTransferType());
-                    System.out.println("Status: " + transfer.getTransferStatus());
+                    System.out.println("Type: " + resolveTransferType(transfer.getTransferType()));
+                    System.out.println("Status: " + resolveTransferStatus(transfer.getTransferStatus()));
                     System.out.println("Amount: $" + transfer.getAmount());
                 }
             }
@@ -264,5 +264,26 @@ public class App {
             return false;
         }
         return amount.compareTo(accountService.getAccountById(currentUserId).getBalance()) <= 0;
+    }
+
+    public String resolveTransferType(int transType) {
+        if (transType == 1) {
+            return "Request";
+        }
+        else if (transType == 2) {
+            return "Send";
+        }
+        return null;
+    }
+
+    public String resolveTransferStatus(int transStatus) {
+        if (transStatus == 1) {
+            return "Pending";
+        } else if (transStatus == 2) {
+            return "Approved";
+        } else if (transStatus == 3) {
+            return "Rejected";
+        }
+        return null;
     }
 }
