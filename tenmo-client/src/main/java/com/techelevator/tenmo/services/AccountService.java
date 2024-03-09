@@ -54,6 +54,17 @@ public class AccountService {
         return users;
     }
 
+    public User getUserById(int id){
+        User[] users = getUsers();
+        for(int i = 0; i < users.length; i++){
+            if(users[i].getId() == id){
+                return users[i];
+            }
+
+        }
+        return null;
+    }
+
     //view transfer history
     public Transfer[] getTransfersByAccountId(int id){
         Transfer[] transfers = null;

@@ -89,7 +89,7 @@ public class App {
             } else if (menuSelection == 5) {
                 requestBucks();
             } else if (menuSelection == 0) {
-                continue;
+                System.exit(1);
             } else {
                 System.out.println("Invalid Selection");
             }
@@ -193,47 +193,73 @@ public class App {
     }
 
 	private void sendBucks() {
+        // initialize vars
 		User[] users = accountService.getUsers();
+        String fromUsername = currentUser.getUser().getUsername();
+        String toUsername;
 
+        // user chooses who to send bucks to
         consoleService.displayOtherUsers(users, currentUser.getUser());
         int userId;
         do {
             userId = consoleService.promptForInt("Enter ID of user you are sending to (0 to cancel): ");
         }
         while (userId == currentUser.getUser().getId());
+        toUsername = accountService.getUserById(userId).getUsername();
+
+        // user chooses amount to send
         BigDecimal amount = null;
         do {
            amount = consoleService.promptForBigDecimal("Enter amount to transfer: ");
         }while(amount.compareTo(BigDecimal.ZERO) <= 0 &&
                 amount.compareTo(accountService.getAccountById(currentUserId).getBalance()) > 0);
+        if(!overdraftProtection(amount)){
+            System.out.println("overdraft");
+            return;
+        }
 
+        // program creates new transfer for database
         int currentUserAccountId = accountService.getAccountById(currentUserId).getAccountId();
         int toUserAccountId = accountService.getAccountById(userId).getAccountId();
-
         Transfer newTransfer = new Transfer(currentUserAccountId, toUserAccountId, amount, 2, 2);
         Transfer receivedTransfer = transferService.transfer(newTransfer);
-        System.out.println("You transferred $" + receivedTransfer.getAmount() + " to this account: " + receivedTransfer.getAccountToId());
+        System.out.println("You transferred $" + receivedTransfer.getAmount() + " to this user: " + toUsername);
 
 	}
 
     private void requestBucks() {
         User[] users = accountService.getUsers();
+        String fromUsername;
+        String toUsername =  currentUser.getUser().getUsername();
+
         consoleService.displayOtherUsers(users, currentUser.getUser());
         int userId;
         do {
             userId = consoleService.promptForInt("Enter ID of user you are requesting from (0 to cancel): ");
         }
         while (userId == currentUser.getUser().getId());
+        fromUsername = accountService.getUserById(userId).getUsername();
+
         BigDecimal amount = null;
         do {
             amount = consoleService.promptForBigDecimal("Enter amount to request: ");
-        }while(amount.compareTo(BigDecimal.ZERO) <= 0);
+        }while(overdraftProtection(amount) && amount.compareTo(BigDecimal.ZERO) <= 0);
+        if(!overdraftProtection(amount)){
+            System.out.println("overdraft");
+            return;
+        }
 
         int fromUserAccountId = accountService.getAccountById(userId).getAccountId();
         int currentUserAccountId = accountService.getAccountById(currentUserId).getAccountId();
-
         Transfer newTransfer = new Transfer(fromUserAccountId, currentUserAccountId, amount, 1, 1);
         Transfer receivedTransfer = transferService.transfer(newTransfer);
-        System.out.println("You requested $" + receivedTransfer.getAmount() + " from this account: " + receivedTransfer.getAccountToId());
+        System.out.println("You requested $" + receivedTransfer.getAmount() + " from this account: " + fromUsername);
+    }
+
+    public boolean overdraftProtection(BigDecimal amount){
+        if(amount == null){
+            return false;
+        }
+        return amount.compareTo(accountService.getAccountById(currentUserId).getBalance()) <= 0;
     }
 }
