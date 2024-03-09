@@ -39,7 +39,6 @@ public class TransferController {
         Transfer returnTransfer = null;
         transfer.setTransferId(transferId);
         try {
-            transfer.setTransferId(transferId);
             returnTransfer = transferDao.transfer(transfer);
         } catch (DaoException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unable to update transfer log or accounts, if needed." + e.getMessage());

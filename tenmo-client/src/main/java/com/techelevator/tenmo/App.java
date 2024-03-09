@@ -139,6 +139,10 @@ public class App {
     }
 
     private void viewPendingRequests() {
+
+        final int APPROVED_TRANSFER_STATUS = 2;
+        final int REJECTED_TRANSFER_STATUS = 3;
+
         int accountId = accountService.getAccountById(currentUserId).getAccountId();
         Transfer[] transfers = accountService.getTransfersByAccountId(accountId);
         System.out.println("\nPending Transfers: ");
@@ -170,8 +174,12 @@ public class App {
                     System.out.println("Okay, returning to main menu.");
                     mainMenu();
                 }
-                else if(input == 1 || input == 2) {
-                    userChoice.setTransferStatus(input+1);
+                else if(input == 1) {
+                    userChoice.setTransferStatus(APPROVED_TRANSFER_STATUS);
+                    transferService.approveOrRejectTransfer(userChoice);
+                }
+                else if (input == 2) {
+                    userChoice.setTransferStatus(REJECTED_TRANSFER_STATUS);
                     transferService.approveOrRejectTransfer(userChoice);
                 }
                 else {
@@ -199,7 +207,10 @@ public class App {
         }while(amount.compareTo(BigDecimal.ZERO) <= 0 &&
                 amount.compareTo(accountService.getAccountById(currentUserId).getBalance()) > 0);
 
-        Transfer newTransfer = new Transfer(currentUserId, userId, amount, 2, 2);
+        int currentUserAccountId = accountService.getAccountById(currentUserId).getAccountId();
+        int toUserAccountId = accountService.getAccountById(userId).getAccountId();
+
+        Transfer newTransfer = new Transfer(currentUserAccountId, toUserAccountId, amount, 2, 2);
         Transfer receivedTransfer = transferService.transfer(newTransfer);
         System.out.println("You transferred $" + receivedTransfer.getAmount() + " to this account: " + receivedTransfer.getAccountToId());
 
@@ -218,7 +229,10 @@ public class App {
             amount = consoleService.promptForBigDecimal("Enter amount to request: ");
         }while(amount.compareTo(BigDecimal.ZERO) <= 0);
 
-        Transfer newTransfer = new Transfer(userId, currentUserId, amount, 1, 1);
+        int fromUserAccountId = accountService.getAccountById(userId).getAccountId();
+        int currentUserAccountId = accountService.getAccountById(currentUserId).getAccountId();
+
+        Transfer newTransfer = new Transfer(fromUserAccountId, currentUserAccountId, amount, 1, 1);
         Transfer receivedTransfer = transferService.transfer(newTransfer);
         System.out.println("You requested $" + receivedTransfer.getAmount() + " from this account: " + receivedTransfer.getAccountToId());
     }

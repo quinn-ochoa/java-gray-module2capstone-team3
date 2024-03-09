@@ -10,7 +10,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,16 +34,18 @@ public class JdbcTransferDao implements TransferDao{
         boolean isApproved = transfer.getTransferStatus() == 2; //true
         boolean isRequest = transfer.getTransferType() == 1;    //true
 
-        if (isSending || (isRequest && isApproved)){
-            Account fromUser = accountDao.makeAccountObjectByUserId(transfer.getAccountFromId());
-            Account toUser = accountDao.makeAccountObjectByUserId(transfer.getAccountToId());
+        if (isSending || (isRequest && isApproved)) {
+
+            Account fromUser = accountDao.getAccountByAccountId(transfer.getAccountFromId()); //TODO fix userId vs accountId
+
+            Account toUser = accountDao.getAccountByAccountId(transfer.getAccountToId());   //TODO fix userId vs accountId
+
             fromUser.setBalance(fromUser.getBalance().subtract(transfer.getAmount()));
             toUser.setBalance(toUser.getBalance().add(transfer.getAmount()));
             accountDao.updateAccount(fromUser);
-            accountDao.updateAccount(toUser);
+            accountDao.updateAccount(toUser);  //TODO: consider making updateAccount take two accounts and use a TRANSACTION in SQL
         }
 
-        // TODO update to accept dynamic transferStatus
         //Transfer status: 1 - pending 2 - approved 3 - rejected
         //Transfer type  : 1 - request 2 - sending
 
@@ -70,7 +71,7 @@ public class JdbcTransferDao implements TransferDao{
     public Transfer updateTransfer(Transfer transfer) {
 
         Transfer updatedTransfer = null;
-        String sql = "UPDATE transfer SET transfer_status = ? WHERE transfer_id = ?;";
+        String sql = "UPDATE transfer SET transfer_status_id = ? WHERE transfer_id = ?;";
 
         try {
             int numberOfRows = jdbcTemplate.update(sql,
@@ -100,11 +101,11 @@ public class JdbcTransferDao implements TransferDao{
         try{
             //TODO Change User ID to Account ID
             int createdTransferId = jdbcTemplate.queryForObject(sql, int.class, transfer.getTransferType(), transfer.getTransferStatus(),
-                    transfer.getAccountFromId() + 1000, transfer.getAccountToId() + 1000, transfer.getAmount());
+                    transfer.getAccountFromId(), transfer.getAccountToId(), transfer.getAmount());
             createdTransfer = getTransferById(createdTransferId);
-        } catch (CannotGetJdbcConnectionException e){
+        } catch (CannotGetJdbcConnectionException e) {
             throw new DaoException("Unable to connect to server or database", e);
-        } catch (DataIntegrityViolationException e){
+        } catch (DataIntegrityViolationException e) {
             throw new DaoException("Data integrity violation", e);
         }
 
