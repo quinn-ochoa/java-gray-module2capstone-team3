@@ -13,11 +13,13 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public class JdbcAccountDaoTests extends BaseDaoTests {
-    private static final Account ACCOUNT_1 = new Account(2001, 1001, 1000.0);
-    private static final Account ACCOUNT_2 = new Account(2002, 1002, 1000.0);
-    private static final Account ACCOUNT_3 = new Account(2003, 1003, 1000.0);
+
+    protected static final Account ACCOUNT_1 = new Account(2001,1001, BigDecimal.valueOf(1000.11));
+    protected static final Account ACCOUNT_2 = new Account(2002, 1002, BigDecimal.valueOf(1000.11));
+    protected static final Account ACCOUNT_3 = new Account(2003, 1003, BigDecimal.valueOf(1000.11));
 
     private  Account testAccount1;
+
     private JdbcAccountDao sut;
 
     @Before
@@ -43,7 +45,7 @@ public class JdbcAccountDaoTests extends BaseDaoTests {
 
     @Test
     public void updateAccount_given_valid_id_returns_updated_account() {
-        Account accountToUpdate = sut.getAccountById(2003);
+        Account accountToUpdate = sut.getAccountById(1003);
 
         accountToUpdate.setUserId(1003); //I'm not sure here
         accountToUpdate.setBalance(BigDecimal.valueOf(200.0));
@@ -51,7 +53,7 @@ public class JdbcAccountDaoTests extends BaseDaoTests {
         Account updatedAccount = sut.updateAccount(accountToUpdate);
         Assert.assertNotNull(updatedAccount);
 
-        Account retrievedAccount = sut.getAccountById(2003);
+        Account retrievedAccount = sut.getAccountById(1003);
         assertAccountsMatch(updatedAccount, retrievedAccount);
     }
 
