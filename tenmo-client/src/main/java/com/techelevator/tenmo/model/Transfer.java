@@ -5,9 +5,9 @@ import java.math.BigDecimal;
 public class Transfer {
     private int transferId;
     private int accountFromId;
-    private String accountFromUsername;
+//    private String accountFromUsername;
     private int accountToId;
-    private String accountToUsername;
+//    private String accountToUsername;
     private BigDecimal amount;
     private int transferType;
     private int transferStatus;
@@ -23,30 +23,30 @@ public class Transfer {
         this.transferStatus = transferStatus;
     }
 
-    public Transfer(int accountFromId, String accountFromUsername, int accountToId, String accountToUsername, BigDecimal amount, int transferType, int transferStatus) {
-        this.accountFromUsername = accountFromUsername;
-        this.accountFromId = accountFromId;
-        this.accountToId = accountToId;
-        this.accountToUsername = accountToUsername;
-        this.amount = amount;
-        this.transferType = transferType;
-        this.transferStatus = transferStatus;
-    }
-    public String getAccountFromUsername() {
-        return accountFromUsername;
-    }
-
-    public void setAccountFromUsername(String accountFromUsername) {
-        this.accountFromUsername = accountFromUsername;
-    }
-
-    public String getAccountToUsername() {
-        return accountToUsername;
-    }
-
-    public void setAccountToUsername(String accountToUsername) {
-        this.accountToUsername = accountToUsername;
-    }
+//    public Transfer(int accountFromId, String accountFromUsername, int accountToId, String accountToUsername, BigDecimal amount, int transferType, int transferStatus) {
+//        this.accountFromUsername = accountFromUsername;
+//        this.accountFromId = accountFromId;
+//        this.accountToId = accountToId;
+//        this.accountToUsername = accountToUsername;
+//        this.amount = amount;
+//        this.transferType = transferType;
+//        this.transferStatus = transferStatus;
+//    }
+//    public String getAccountFromUsername() {
+//        return accountFromUsername;
+//    }
+//
+//    public void setAccountFromUsername(String accountFromUsername) {
+//        this.accountFromUsername = accountFromUsername;
+//    }
+//
+//    public String getAccountToUsername() {
+//        return accountToUsername;
+//    }
+//
+//    public void setAccountToUsername(String accountToUsername) {
+//        this.accountToUsername = accountToUsername;
+//    }
 
     public int getTransferId() {
         return transferId;

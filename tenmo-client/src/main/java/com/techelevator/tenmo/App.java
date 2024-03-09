@@ -145,7 +145,7 @@ public class App {
         for(Transfer transfer : transfers){
             if (transfer.getTransferStatus() == 1 && transfer.getAccountFromId() == accountId) {
                 System.out.println("ID: " + transfer.getTransferId());
-                System.out.println("To: " + transfer.getAccountToUsername()); //should be account name
+                System.out.println("To: " ); //TODO implement getUsernameById() method
                 System.out.println("Amount: " + transfer.getAmount());
             }
         }

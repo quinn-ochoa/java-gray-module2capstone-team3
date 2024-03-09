@@ -22,9 +22,9 @@ public class Transfer {
 //    @NotBlank(message = "must have a transferStatus.")
     private int transferStatus;
 
-    private String accountFromUsername;
-
-    private String accountToUsername;
+//    private String accountFromUsername;
+//
+//    private String accountToUsername;
 
     public Transfer() {}
 
@@ -36,36 +36,36 @@ public class Transfer {
         this.transferStatus = transferStatus;
     }
 
-    public Transfer(int accountFromId, String accountFromUsername, int accountToId, String accountToUsername, BigDecimal amount, int transferType, int transferStatus) {
-        this.accountFromUsername = accountFromUsername;
-        this.accountFromId = accountFromId;
-        this.accountToId = accountToId;
-        this.accountToUsername = accountToUsername;
-        this.amount = amount;
-        this.transferType = transferType;
-        this.transferStatus = transferStatus;
-    }
+//    public Transfer(int accountFromId, String accountFromUsername, int accountToId, String accountToUsername, BigDecimal amount, int transferType, int transferStatus) {
+//        this.accountFromUsername = accountFromUsername;
+//        this.accountFromId = accountFromId;
+//        this.accountToId = accountToId;
+//        this.accountToUsername = accountToUsername;
+//        this.amount = amount;
+//        this.transferType = transferType;
+//        this.transferStatus = transferStatus;
+//    }
     public int getTransferId(){
         return transferId;
     }
     public void setTransferId(int transferId){
         this.transferId = transferId;
     }
-    public String getAccountFromUsername() {
-        return accountFromUsername;
-    }
-
-    public void setAccountFromUsername(String accountFromUsername) {
-        this.accountFromUsername = accountFromUsername;
-    }
-
-    public String getAccountToUsername() {
-        return accountToUsername;
-    }
-
-    public void setAccountToUsername(String accountToUsername) {
-        this.accountToUsername = accountToUsername;
-    }
+//    public String getAccountFromUsername() {
+//        return accountFromUsername;
+//    }
+//
+//    public void setAccountFromUsername(String accountFromUsername) {
+//        this.accountFromUsername = accountFromUsername;
+//    }
+//
+//    public String getAccountToUsername() {
+//        return accountToUsername;
+//    }
+//
+//    public void setAccountToUsername(String accountToUsername) {
+//        this.accountToUsername = accountToUsername;
+//    }
 
     public int getAccountFromId() {
         return accountFromId;

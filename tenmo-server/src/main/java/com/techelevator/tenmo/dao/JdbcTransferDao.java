@@ -153,16 +153,16 @@ public class JdbcTransferDao implements TransferDao{
         return transfer;
     }
 
-    public Transfer mapRowToTransfer(SqlRowSet rowSet, String toUsername, String fromUsername) {
-        Transfer transfer = new Transfer();
-//        transfer.setId(rowSet.getInt("transfer_id"));
-        transfer.setAccountFromId(rowSet.getInt("account_from"));
-        transfer.setAccountToId(rowSet.getInt("account_to"));
-        transfer.setAmount(rowSet.getBigDecimal("amount"));
-        transfer.setTransferStatus(rowSet.getInt("transfer_status_id"));
-        transfer.setTransferType(rowSet.getInt("transfer_type_id"));
-        transfer.setAccountToUsername(toUsername);
-        transfer.setAccountFromUsername(fromUsername);
-        return transfer;
-    }
+//    public Transfer mapRowToTransfer(SqlRowSet rowSet, String toUsername, String fromUsername) {
+//        Transfer transfer = new Transfer();
+////        transfer.setId(rowSet.getInt("transfer_id"));
+//        transfer.setAccountFromId(rowSet.getInt("account_from"));
+//        transfer.setAccountToId(rowSet.getInt("account_to"));
+//        transfer.setAmount(rowSet.getBigDecimal("amount"));
+//        transfer.setTransferStatus(rowSet.getInt("transfer_status_id"));
+//        transfer.setTransferType(rowSet.getInt("transfer_type_id"));
+//        transfer.setAccountToUsername(toUsername);
+//        transfer.setAccountFromUsername(fromUsername);
+//        return transfer;
+//    }
 }
