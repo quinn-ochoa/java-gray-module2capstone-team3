@@ -14,6 +14,9 @@ public class Account {
         this.balance = balance;
     }
 
+    public Account(int accountId, int userId, double v) {
+    }
+
     public int getAccountId() {
         return accountId;
     }
