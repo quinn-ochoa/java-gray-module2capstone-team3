@@ -127,7 +127,8 @@ public class JdbcTransferDao implements TransferDao{
     public List<Transfer> getTransfersByAccountId(int id) {
         List <Transfer> transfers = new ArrayList<>();
         String sql = "SELECT * FROM transfer FULL JOIN account ON transfer.account_from " +
-                    "= account.account_id WHERE account_from = ? OR account_to = ?; ";
+                    "= account.account_id WHERE account_from = ? OR account_to = ? " +
+                    "ORDER BY transfer_id; ";
         try {
             SqlRowSet results = jdbcTemplate.queryForRowSet(sql, id, id);
             while (results.next()) {
